@@ -3,13 +3,12 @@ import { Zap, Trophy, Users, TrendingUp, Package, Star } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { dailyShopCards } from '../../data/mockData';
+import { useNavigate } from 'react-router-dom';
+import { useGameStateContext } from '../../hooks/useGameState';
 
-interface HomePageProps {
-  onNavigate: (page: string) => void;
-  isAuthenticated: boolean;
-}
-
-export const HomePage: React.FC<HomePageProps> = ({ onNavigate, isAuthenticated }) => {
+export const HomePage: React.FC = () => {
+  const navigate = useNavigate();
+  const { gameState } = useGameStateContext();
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900">
       {/* Hero Section */}
@@ -35,16 +34,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, isAuthenticated 
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {isAuthenticated ? (
-                <Button size="lg" onClick={() => onNavigate('dashboard')}>
+              {gameState.isAuthenticated ? (
+                <Button size="lg" onClick={() => navigate('/dashboard')}>
                   Voir ma Collection
                 </Button>
               ) : (
-                <Button size="lg" onClick={() => onNavigate('login')}>
+                <Button size="lg" onClick={() => navigate('/login')}>
                   Commencer l'Aventure
                 </Button>
               )}
-              <Button variant="outline" size="lg" onClick={() => onNavigate('shop')}>
+              <Button variant="outline" size="lg" onClick={() => navigate('/shop')}>
                 Explorer la Boutique
               </Button>
             </div>
@@ -114,7 +113,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, isAuthenticated 
           </div>
           
           <div className="text-center">
-            <Button size="lg" onClick={() => onNavigate('shop')}>
+            <Button size="lg" onClick={() => navigate('/shop')}>
               <Package className="w-5 h-5 mr-2" />
               Voir toute la Boutique
             </Button>
@@ -157,12 +156,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, isAuthenticated 
             <p className="text-gray-300 text-lg mb-8">
               Rejoignez des milliers de passionnés et construisez la collection F1 ultime !
             </p>
-            {isAuthenticated ? (
-              <Button size="lg" onClick={() => onNavigate('packs')}>
+            {gameState.isAuthenticated ? (
+              <Button size="lg" onClick={() => navigate('/packs')}>
                 Ouvrir votre premier Pack
               </Button>
             ) : (
-              <Button size="lg" onClick={() => onNavigate('login')}>
+              <Button size="lg" onClick={() => navigate('/login')}>
                 Créer un Compte Gratuit
               </Button>
             )}
