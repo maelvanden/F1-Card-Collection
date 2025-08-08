@@ -6,11 +6,20 @@ import { Dashboard } from './components/pages/Dashboard';
 import { PacksPage } from './components/pages/PacksPage';
 import { ShopPage } from './components/pages/ShopPage';
 import { MarketplacePage } from './components/pages/MarketplacePage';
-import { useGameState } from './hooks/useGameState';
+import { GameStateProvider } from './context/GameStateContext';
+import { useGameStateContext } from './hooks/useGameState';
 
 function App() {
+  return (
+    <GameStateProvider>
+      <AppContent />
+    </GameStateProvider>
+  );
+}
+
+const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('home');
-  const { gameState } = useGameState();
+  const { gameState } = useGameStateContext();
 
   const handleNavigate = (page: string) => {
     setCurrentPage(page);
@@ -43,6 +52,6 @@ function App() {
       </main>
     </div>
   );
-}
+};
 
 export default App;

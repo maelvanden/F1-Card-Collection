@@ -1,6 +1,6 @@
 import React from 'react';
 import { Zap, User, ShoppingBag, Home, Package, TrendingUp, LogOut } from 'lucide-react';
-import { useGameState } from '../../hooks/useGameState';
+import { useGameStateContext } from '../../hooks/useGameState';
 
 interface HeaderProps {
   currentPage: string;
@@ -8,7 +8,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
-  const { gameState, logout } = useGameState();
+  const { gameState, logout } = useGameStateContext();
 
   const navItems = [
     { id: 'home', label: 'Accueil', icon: Home },

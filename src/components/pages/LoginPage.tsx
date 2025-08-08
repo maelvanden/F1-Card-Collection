@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Zap, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { useGameState } from '../../hooks/useGameState';
+import { useGameStateContext } from '../../hooks/useGameState';
 import { mockUser } from '../../data/mockData';
 
 interface LoginPageProps {
@@ -13,7 +13,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const { login } = useGameState();
+  const { login } = useGameStateContext();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
