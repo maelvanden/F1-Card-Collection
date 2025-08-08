@@ -75,7 +75,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 <Package className="w-8 h-8 text-blue-400 mr-3" />
                 <div>
                   <div className="text-2xl font-bold text-white">{gameState.userCards.length}</div>
-                  <div className="text-gray-300 text-sm">Cartes Total</div>
+                  <div className="text-gray-300 text-sm">Cartes totales</div>
                 </div>
               </div>
             </div>
