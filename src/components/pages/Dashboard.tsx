@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Search, Filter, SortAsc, Package, TrendingUp, Zap, User } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 import { useGameState } from '../../hooks/useGameState';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { CardRarity, CardType } from '../../types';
 
-interface DashboardProps {
-  onNavigate: (page: string) => void;
-}
 
-export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+export const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { gameState } = useGameState();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
@@ -49,7 +48,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Accès restreint</h2>
           <p className="text-gray-300 mb-8">Connectez-vous pour accéder à votre collection</p>
-          <Button onClick={() => onNavigate('login')}>Se connecter</Button>
+          <Button onClick={() => navigate('/login')}>Se connecter</Button>
         </div>
       </div>
     );
@@ -184,7 +183,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 ? 'Essayez de modifier vos filtres'
                 : 'Commencez par acheter quelques packs !'}
             </p>
-            <Button onClick={() => onNavigate('packs')}>
+            <Button onClick={() => navigate('/packs')}>
               Acheter des Packs
             </Button>
           </div>
