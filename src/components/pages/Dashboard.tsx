@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Filter, SortAsc, Package, TrendingUp, Zap, User } from 'lucide-react';
-import { useGameState } from '../../hooks/useGameState';
+import { Search, Package, TrendingUp, Zap, User } from 'lucide-react';
+import { useGameStateContext } from '../../hooks/useGameState';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { CardRarity, CardType } from '../../types';
@@ -10,7 +10,7 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
-  const { gameState } = useGameState();
+  const { gameState } = useGameStateContext();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [filterRarity, setFilterRarity] = useState('all');
@@ -27,9 +27,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       switch (sortBy) {
         case 'price':
           return b.price - a.price;
-        case 'rarity':
+        case 'rarity': {
           const rarityOrder = { common: 1, rare: 2, epic: 3, legendary: 4, mythic: 5 };
-          return rarityOrder[b.rarity as keyof typeof rarityOrder] - rarityOrder[a.rarity as keyof typeof rarityOrder];
+          return (
+            rarityOrder[b.rarity as keyof typeof rarityOrder] -
+            rarityOrder[a.rarity as keyof typeof rarityOrder]
+          );
+        }
         case 'date':
           return new Date(b.obtainedDate || 0).getTime() - new Date(a.obtainedDate || 0).getTime();
         default:

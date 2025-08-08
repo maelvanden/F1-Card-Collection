@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Package, Zap, Star, Gift } from 'lucide-react';
-import { useGameState } from '../../hooks/useGameState';
+import { useGameStateContext } from '../../hooks/useGameState';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { availablePacks } from '../../data/mockData';
@@ -12,7 +12,7 @@ interface PacksPageProps {
 }
 
 export const PacksPage: React.FC<PacksPageProps> = ({ onNavigate }) => {
-  const { gameState, updateSpeedCoins, addCards } = useGameState();
+  const { gameState, updateSpeedCoins, addCards } = useGameStateContext();
   const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
   const [openingPack, setOpeningPack] = useState(false);
   const [openedCards, setOpenedCards] = useState<CardType[]>([]);

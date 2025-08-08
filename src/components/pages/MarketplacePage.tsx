@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { TrendingUp, Search, Filter, Zap } from 'lucide-react';
-import { useGameState } from '../../hooks/useGameState';
+import { useGameStateContext } from '../../hooks/useGameState';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { marketListings } from '../../data/mockData';
+import { MarketListing } from '../../types';
 
 interface MarketplacePageProps {
   onNavigate: (page: string) => void;
 }
 
 export const MarketplacePage: React.FC<MarketplacePageProps> = ({ onNavigate }) => {
-  const { gameState, updateSpeedCoins } = useGameState();
+  const { gameState, updateSpeedCoins } = useGameStateContext();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('price_asc');
 
-  const handleBuyCard = (listing: any) => {
+  const handleBuyCard = (listing: MarketListing) => {
     if (gameState.speedCoins >= listing.price) {
       updateSpeedCoins(-listing.price);
       // Dans une vraie app, on ajouterait la carte à l'inventaire

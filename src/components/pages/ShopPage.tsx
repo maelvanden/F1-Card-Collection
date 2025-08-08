@@ -1,18 +1,19 @@
 import React from 'react';
 import { ShoppingBag, Clock, Zap, Star } from 'lucide-react';
-import { useGameState } from '../../hooks/useGameState';
+import { useGameStateContext } from '../../hooks/useGameState';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { dailyShopCards } from '../../data/mockData';
+import { Card as CardType } from '../../types';
 
 interface ShopPageProps {
   onNavigate: (page: string) => void;
 }
 
 export const ShopPage: React.FC<ShopPageProps> = ({ onNavigate }) => {
-  const { gameState, updateSpeedCoins, addCards } = useGameState();
+  const { gameState, updateSpeedCoins, addCards } = useGameStateContext();
 
-  const handleBuyCard = (card: any) => {
+  const handleBuyCard = (card: CardType) => {
     if (gameState.speedCoins >= card.price) {
       updateSpeedCoins(-card.price);
       addCards([{ ...card, obtainedDate: new Date() }]);
@@ -82,7 +83,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({ onNavigate }) => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {dailyShopCards.map((card, index) => {
+            {dailyShopCards.map((card) => {
               const canAfford = gameState.speedCoins >= card.price;
               
               return (
