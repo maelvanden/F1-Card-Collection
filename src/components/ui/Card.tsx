@@ -33,7 +33,7 @@ export const Card: React.FC<CardProps> = ({
   const sizeClasses = {
     sm: 'w-32 h-44',
     md: 'w-40 h-56',
-    lg: 'w-48 h-68'
+    lg: 'w-48 h-72'
   };
 
   return (
