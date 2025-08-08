@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Zap, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 import { Button } from '../ui/Button';
 import { useGameState } from '../../hooks/useGameState';
 import { mockUser } from '../../data/mockData';
 
-interface LoginPageProps {
-  onNavigate: (page: string) => void;
-}
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
+export const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +25,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
     };
     
     login(user);
-    onNavigate('dashboard');
+    navigate('/dashboard');
   };
 
   return (
