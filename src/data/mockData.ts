@@ -83,7 +83,7 @@ export const availablePacks: Pack[] = [
     type: PackType.LEGENDARY,
     price: 15000,
     cardCount: 7,
-    description: 'Pack exclusif avec garantie de cartes épiques',
+    description: 'Fortes chances d\'obtenir des cartes épiques',
     imageUrl: 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg'
   }
 ];
