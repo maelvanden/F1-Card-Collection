@@ -20,6 +20,7 @@ npm install
 - `npm run dev` : démarre un serveur de développement avec rechargement à chaud.
 - `npm run build` : génère la version de production dans le dossier `dist/`.
 - `npm run preview` : lance un serveur pour prévisualiser la version de production.
+- `npm test` : exécute les tests unitaires avec Vitest.
 
 ## Contribuer
 
