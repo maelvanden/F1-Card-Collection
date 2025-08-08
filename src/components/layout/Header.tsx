@@ -1,21 +1,17 @@
 import React from 'react';
 import { Zap, User, ShoppingBag, Home, Package, TrendingUp, LogOut } from 'lucide-react';
+import { Link, NavLink } from 'react-router-dom';
 import { useGameState } from '../../hooks/useGameState';
 
-interface HeaderProps {
-  currentPage: string;
-  onNavigate: (page: string) => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
+export const Header: React.FC = () => {
   const { gameState, logout } = useGameState();
 
   const navItems = [
-    { id: 'home', label: 'Accueil', icon: Home },
-    { id: 'dashboard', label: 'Collection', icon: User },
-    { id: 'shop', label: 'Boutique', icon: ShoppingBag },
-    { id: 'marketplace', label: 'Marché', icon: TrendingUp },
-    { id: 'packs', label: 'Packs', icon: Package }
+    { to: '/', label: 'Accueil', icon: Home },
+    { to: '/dashboard', label: 'Collection', icon: User },
+    { to: '/shop', label: 'Boutique', icon: ShoppingBag },
+    { to: '/marketplace', label: 'Marché', icon: TrendingUp },
+    { to: '/packs', label: 'Packs', icon: Package }
   ];
 
   return (
@@ -36,18 +32,20 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
               {navItems.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => onNavigate(item.id)}
-                    className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      currentPage === item.id
-                        ? 'bg-red-600 text-white shadow-lg'
-                        : 'text-gray-300 hover:text-white hover:bg-red-700/50'
-                    }`}
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                        isActive
+                          ? 'bg-red-600 text-white shadow-lg'
+                          : 'text-gray-300 hover:text-white hover:bg-red-700/50'
+                      }`
+                    }
                   >
                     <Icon className="w-4 h-4 mr-2" />
                     {item.label}
-                  </button>
+                  </NavLink>
                 );
               })}
             </nav>
@@ -60,12 +58,12 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                   <Zap className="w-4 h-4 mr-1" />
                   <span>{gameState.speedCoins.toLocaleString()} SC</span>
                 </div>
-                
+
                 <div className="flex items-center text-white">
                   <User className="w-5 h-5 mr-2" />
                   <span className="font-medium">{gameState.user?.username}</span>
                 </div>
-                
+
                 <button
                   onClick={logout}
                   className="text-gray-300 hover:text-white p-2 rounded-lg hover:bg-red-700/50 transition-colors"
@@ -75,12 +73,12 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 </button>
               </>
             ) : (
-              <button
-                onClick={() => onNavigate('login')}
+              <Link
+                to="/login"
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Connexion
-              </button>
+              </Link>
             )}
           </div>
         </div>
@@ -91,18 +89,20 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
-                <button
-                  key={item.id}
-                  onClick={() => onNavigate(item.id)}
-                  className={`flex items-center px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200 ${
-                    currentPage === item.id
-                      ? 'bg-red-600 text-white'
-                      : 'text-gray-300 hover:text-white hover:bg-red-700/50'
-                  }`}
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `flex items-center px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200 ${
+                      isActive
+                        ? 'bg-red-600 text-white'
+                        : 'text-gray-300 hover:text-white hover:bg-red-700/50'
+                    }`
+                  }
                 >
                   <Icon className="w-3 h-3 mr-1" />
                   {item.label}
-                </button>
+                </NavLink>
               );
             })}
           </nav>

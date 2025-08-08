@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { TrendingUp, Search, Filter, Zap } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 import { useGameState } from '../../hooks/useGameState';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { marketListings } from '../../data/mockData';
 
-interface MarketplacePageProps {
-  onNavigate: (page: string) => void;
-}
 
-export const MarketplacePage: React.FC<MarketplacePageProps> = ({ onNavigate }) => {
+export const MarketplacePage: React.FC = () => {
+  const navigate = useNavigate();
   const { gameState, updateSpeedCoins } = useGameState();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('price_asc');
@@ -45,7 +44,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({ onNavigate }) 
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Accès restreint</h2>
           <p className="text-gray-300 mb-8">Connectez-vous pour accéder au marché</p>
-          <Button onClick={() => onNavigate('login')}>Se connecter</Button>
+          <Button onClick={() => navigate('/login')}>Se connecter</Button>
         </div>
       </div>
     );
@@ -170,7 +169,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({ onNavigate }) 
           </p>
           
           <div className="text-center">
-            <Button onClick={() => onNavigate('dashboard')} variant="secondary">
+            <Button onClick={() => navigate('/dashboard')} variant="secondary">
               Accéder à ma Collection
             </Button>
           </div>

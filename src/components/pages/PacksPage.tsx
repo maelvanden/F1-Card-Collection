@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Package, Zap, Star, Gift } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 import { useGameState } from '../../hooks/useGameState';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -7,11 +8,9 @@ import { availablePacks } from '../../data/mockData';
 import { openPack } from '../../utils/cardGeneration';
 import { Pack, Card as CardType } from '../../types';
 
-interface PacksPageProps {
-  onNavigate: (page: string) => void;
-}
 
-export const PacksPage: React.FC<PacksPageProps> = ({ onNavigate }) => {
+export const PacksPage: React.FC = () => {
+  const navigate = useNavigate();
   const { gameState, updateSpeedCoins, addCards } = useGameState();
   const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
   const [openingPack, setOpeningPack] = useState(false);
@@ -47,7 +46,7 @@ export const PacksPage: React.FC<PacksPageProps> = ({ onNavigate }) => {
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Accès restreint</h2>
           <p className="text-gray-300 mb-8">Connectez-vous pour acheter des packs</p>
-          <Button onClick={() => onNavigate('login')}>Se connecter</Button>
+          <Button onClick={() => navigate('/login')}>Se connecter</Button>
         </div>
       </div>
     );
@@ -112,7 +111,7 @@ export const PacksPage: React.FC<PacksPageProps> = ({ onNavigate }) => {
             <Button onClick={handleCloseResult}>
               Continuer
             </Button>
-            <Button variant="secondary" onClick={() => onNavigate('dashboard')}>
+            <Button variant="secondary" onClick={() => navigate('/dashboard')}>
               Voir ma Collection
             </Button>
           </div>
