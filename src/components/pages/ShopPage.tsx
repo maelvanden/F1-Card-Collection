@@ -5,12 +5,10 @@ import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { dailyShopCards } from '../../data/mockData';
 import { Card as CardType } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
-interface ShopPageProps {
-  onNavigate: (page: string) => void;
-}
-
-export const ShopPage: React.FC<ShopPageProps> = ({ onNavigate }) => {
+export const ShopPage: React.FC = () => {
+  const navigate = useNavigate();
   const { gameState, updateSpeedCoins, addCards } = useGameStateContext();
 
   const handleBuyCard = (card: CardType) => {
@@ -40,7 +38,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({ onNavigate }) => {
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Accès restreint</h2>
           <p className="text-gray-300 mb-8">Connectez-vous pour accéder à la boutique</p>
-          <Button onClick={() => onNavigate('login')}>Se connecter</Button>
+          <Button onClick={() => navigate('/login')}>Se connecter</Button>
         </div>
       </div>
     );
@@ -126,7 +124,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({ onNavigate }) => {
         {/* Navigation Cards */}
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-gradient-to-br from-red-600/20 to-red-800/20 border border-red-500/30 rounded-2xl p-8 hover:from-red-600/30 hover:to-red-800/30 transition-all duration-300 cursor-pointer"
-               onClick={() => onNavigate('packs')}>
+               onClick={() => navigate('/packs')}>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <ShoppingBag className="text-white w-8 h-8" />
@@ -140,7 +138,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="bg-gradient-to-br from-green-600/20 to-green-800/20 border border-green-500/30 rounded-2xl p-8 hover:from-green-600/30 hover:to-green-800/30 transition-all duration-300 cursor-pointer"
-               onClick={() => onNavigate('marketplace')}>
+               onClick={() => navigate('/marketplace')}>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <Star className="text-white w-8 h-8" />
