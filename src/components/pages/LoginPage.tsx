@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Zap, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Zap, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useGameStateContext } from '../../hooks/useGameState';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,8 @@ export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useGameStateContext();
   const navigate = useNavigate();
 
@@ -20,6 +22,13 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password || (!isLogin && !username)) {
+      setError('Veuillez remplir tous les champs');
+      return;
+    }
+
+    setError('');
+    setLoading(true);
     const endpoint = isLogin ? '/api/login' : '/api/register';
     const payload = isLogin
       ? { email, password }
@@ -30,12 +39,18 @@ export const LoginPage: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      if (!res.ok) throw new Error('Authentication failed');
-      const data: AuthResponse = await res.json();
-      login(data);
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Une erreur est survenue");
+        return;
+      }
+      login(data as AuthResponse);
       navigate('/dashboard');
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
+      setError("Erreur de connexion");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +74,12 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-500/10 border border-red-500 text-red-400 text-sm p-3 rounded">
+                {error}
+              </div>
+            )}
+
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -109,18 +130,37 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            <Button type="submit" size="lg" className="w-full">
-              <span>{isLogin ? 'Se connecter' : 'Créer le compte'}</span>
-              <ArrowRight className="w-5 h-5 ml-2" />
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="ml-2">
+                    {isLogin ? 'Connexion...' : 'Inscription...'}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span>{isLogin ? 'Se connecter' : 'Créer le compte'}</span>
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </>
+              )}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setError('');
+              }}
               className="text-red-400 hover:text-red-300 text-sm font-medium"
             >
-              {isLogin 
+              {isLogin
                 ? "Pas encore de compte ? S'inscrire"
                 : "Déjà un compte ? Se connecter"
               }
