@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStateContext } from '../../hooks/useGameState';
@@ -27,7 +28,7 @@ const AchievementToast: React.FC = () => {
     clearLastAchievement();
   };
 
-  return (
+  return createPortal(
     <div className="fixed bottom-4 right-4 bg-black/90 text-white p-4 rounded-lg shadow-lg w-72 relative">
       <button onClick={close} className="absolute top-2 right-2 text-gray-300 hover:text-white">
         <X size={16} />
@@ -37,7 +38,8 @@ const AchievementToast: React.FC = () => {
       <Button size="sm" onClick={() => { navigate('/achievements'); close(); }}>
         Voir les succès
       </Button>
-    </div>
+    </div>,
+    document.body
   );
 };
 
