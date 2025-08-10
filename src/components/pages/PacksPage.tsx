@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const PacksPage: React.FC = () => {
   const navigate = useNavigate();
-  const { gameState, updateSpeedCoins, addCards, unlockAchievement } = useGameStateContext();
+  const { gameState, updateSpeedCoins, addCards, unlockAchievement, incrementPacksOpened } = useGameStateContext();
   const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
   const [openingPack, setOpeningPack] = useState(false);
   const [openedCards, setOpenedCards] = useState<CardType[]>([]);
@@ -27,7 +27,8 @@ export const PacksPage: React.FC = () => {
         setOpenedCards(cards);
         updateSpeedCoins(-pack.price);
         addCards(cards);
-        unlockAchievement('first_pack');
+        incrementPacksOpened();
+        unlockAchievement('daily_pack', 'daily');
         setOpeningPack(false);
         setShowPackResult(true);
       }, 3000);

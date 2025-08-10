@@ -81,6 +81,8 @@ export interface GameState {
   user: User | null;
   userCards: Card[];
   speedCoins: number;
+  packsOpened: number;
+  cardsPurchased: number;
   isAuthenticated: boolean;
 }
 
