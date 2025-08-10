@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, User, ShoppingBag, Home, Package, TrendingUp, LogOut } from 'lucide-react';
+import { Zap, User, ShoppingBag, Home, Package, TrendingUp, LogOut, Trophy } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 import { useGameStateContext } from '../../hooks/useGameState';
 
@@ -11,7 +11,8 @@ export const Header: React.FC = () => {
     { id: 'dashboard', label: 'Collection', icon: User, path: '/dashboard' },
     { id: 'shop', label: 'Boutique', icon: ShoppingBag, path: '/shop' },
     { id: 'marketplace', label: 'Marché', icon: TrendingUp, path: '/marketplace' },
-    { id: 'packs', label: 'Packs', icon: Package, path: '/packs' }
+    { id: 'packs', label: 'Packs', icon: Package, path: '/packs' },
+    { id: 'achievements', label: 'Succès', icon: Trophy, path: '/achievements' }
   ];
 
   return (

@@ -8,6 +8,7 @@ import { PacksPage } from './components/pages/PacksPage';
 import { ShopPage } from './components/pages/ShopPage';
 import { MarketplacePage } from './components/pages/MarketplacePage';
 import { CardDetailsPage } from './components/pages/CardDetailsPage';
+import AchievementsPanel from './components/pages/AchievementsPanel';
 
 export const AppRouter: React.FC = () => (
   <BrowserRouter>
@@ -16,6 +17,7 @@ export const AppRouter: React.FC = () => (
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/achievements" element={<AchievementsPanel />} />
       <Route path="/packs" element={<PacksPage />} />
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/marketplace" element={<MarketplacePage />} />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Package, TrendingUp, Zap, User } from 'lucide-react';
+import { Search, Package, TrendingUp, Zap, User, Trophy } from 'lucide-react';
 import { useGameStateContext } from '../../hooks/useGameState';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -62,12 +62,22 @@ export const Dashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center mb-6">
-            <User className="w-8 h-8 text-red-400 mr-3" />
-            <div>
-              <h1 className="text-4xl font-bold text-white">Ma Collection</h1>
-              <p className="text-gray-300">Bienvenue, {gameState.user?.username} !</p>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <User className="w-8 h-8 text-red-400 mr-3" />
+              <div>
+                <h1 className="text-4xl font-bold text-white">Ma Collection</h1>
+                <p className="text-gray-300">Bienvenue, {gameState.user?.username} !</p>
+              </div>
             </div>
+            <Button
+              onClick={() => navigate('/achievements')}
+              variant="secondary"
+              className="flex items-center"
+            >
+              <Trophy className="w-4 h-4 mr-2" />
+              Succès
+            </Button>
           </div>
 
           {/* Stats Cards */}
