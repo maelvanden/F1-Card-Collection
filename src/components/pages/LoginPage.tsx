@@ -29,7 +29,8 @@ export const LoginPage: React.FC = () => {
 
     setError('');
     setLoading(true);
-    const endpoint = isLogin ? '/api/login' : '/api/register';
+    const apiUrl = import.meta.env.VITE_API_URL || '/api';
+    const endpoint = isLogin ? `${apiUrl}/login` : `${apiUrl}/register`;
     const payload = isLogin
       ? { email, password }
       : { email, password, username };

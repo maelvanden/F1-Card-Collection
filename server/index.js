@@ -2,8 +2,10 @@ import express from 'express';
 import Database from 'better-sqlite3';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const db = new Database('data.sqlite');
