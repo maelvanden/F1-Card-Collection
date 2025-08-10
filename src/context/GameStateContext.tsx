@@ -117,11 +117,14 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [gameState.userCards.length]);
 
   const unlockAchievement = (id: string) => {
-    setAchievements(prev =>
-      prev.map(a =>
+    setAchievements(prev => {
+      const achievement = prev.find(a => a.id === id);
+      if (!achievement || achievement.unlocked) return prev;
+      updateSpeedCoins(achievement.reward);
+      return prev.map(a =>
         a.id === id ? { ...a, progress: 100, unlocked: true } : a
-      )
-    );
+      );
+    });
   };
 
   return (
