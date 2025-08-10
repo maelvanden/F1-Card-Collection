@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Zap, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useGameStateContext } from '../../hooks/useGameState';
-import { mockUser } from '../../data/mockData';
 import { useNavigate } from 'react-router-dom';
+import { User as GameUser } from '../../types';
 
 export const LoginPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,18 +13,30 @@ export const LoginPage: React.FC = () => {
   const { login } = useGameStateContext();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  interface AuthResponse {
+    user: GameUser;
+    token: string;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simulation de l'authentification
-    const user = {
-      ...mockUser,
-      email: email || mockUser.email,
-      username: username || mockUser.username
-    };
-    
-    login(user);
-    navigate('/dashboard');
+    const endpoint = isLogin ? '/api/login' : '/api/register';
+    const payload = isLogin
+      ? { email, password }
+      : { email, password, username };
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('Authentication failed');
+      const data: AuthResponse = await res.json();
+      login(data);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

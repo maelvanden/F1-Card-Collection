@@ -8,7 +8,7 @@ interface GameStateContextType {
   gameState: GameState;
   achievements: Achievement[];
   dailyAchievements: Achievement[];
-  login: (user: User) => void;
+  login: (data: { user: User; token: string }) => void;
   logout: () => void;
   updateSpeedCoins: (amount: number) => void;
   addCards: (cards: Card[]) => void;
@@ -31,7 +31,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     speedCoins: 0,
     packsOpened: 0,
     cardsPurchased: 0,
-    isAuthenticated: false
+    isAuthenticated: false,
+    token: null
   });
   const [achievements, setAchievements] = useState<Achievement[]>(defaultAchievements);
   const [dailyAchievements, setDailyAchievements] = useState<Achievement[]>(defaultDailyAchievements);
@@ -112,7 +113,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   }, [resetDailyChallenges]);
 
-  const login = (user: User) => {
+  const login = ({ user, token }: { user: User; token: string }) => {
+    localStorage.setItem('authToken', token);
     setGameState(prev => ({
       ...prev,
       user,
@@ -120,7 +122,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       userCards: sampleCards,
       packsOpened: 0,
       cardsPurchased: 0,
-      isAuthenticated: true
+      isAuthenticated: true,
+      token
     }));
   };
 
@@ -131,9 +134,11 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       speedCoins: 0,
       packsOpened: 0,
       cardsPurchased: 0,
-      isAuthenticated: false
+      isAuthenticated: false,
+      token: null
     });
     localStorage.removeItem('f1-game-state');
+    localStorage.removeItem('authToken');
   };
 
   const updateSpeedCoins = (amount: number) => {

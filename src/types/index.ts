@@ -84,6 +84,7 @@ export interface GameState {
   packsOpened: number;
   cardsPurchased: number;
   isAuthenticated: boolean;
+  token: string | null;
 }
 
 export * from './achievement';
