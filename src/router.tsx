@@ -23,7 +23,7 @@ export const AppRouter: React.FC = () => (
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/card/:id" element={<CardDetailsPage />} />
-      <Route path="/profile/:id" element={<ProfilePage />} />
+      <Route path="/profile/:username" element={<ProfilePage />} />
     </Routes>
   </BrowserRouter>
 );

@@ -60,7 +60,7 @@ export const Header: React.FC = () => {
                   <span>{gameState.speedCoins.toLocaleString()} SC</span>
                 </div>
 
-                <Link to={`/profile/${gameState.user?.id}`} className="flex items-center text-white hover:underline">
+                <Link to={`/profile/${gameState.user?.username}`} className="flex items-center text-white hover:underline">
                   <User className="w-5 h-5 mr-2" />
                   <span className="font-medium">{gameState.user?.username}</span>
                 </Link>

@@ -5,12 +5,12 @@ import { bannerOptions } from '../../data/banners';
 import { Button } from '../ui/Button';
 
 export const ProfilePage: React.FC = () => {
-  const { id } = useParams();
+  const { username } = useParams();
   const { gameState, updateUserProfile } = useGameStateContext();
   const user = gameState.user;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!user || user.id !== id) {
+  if (!user || user.username !== username) {
     return <div className="text-white p-8">Profil introuvable</div>;
   }
 
