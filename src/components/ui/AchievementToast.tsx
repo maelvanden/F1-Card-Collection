@@ -29,7 +29,7 @@ const AchievementToast: React.FC = () => {
   };
 
   return createPortal(
-    <div className="fixed bottom-4 right-4 bg-black/90 text-white p-4 rounded-lg shadow-lg w-72 relative">
+    <div className="fixed top-4 right-4 bg-black/90 text-white p-4 rounded-lg shadow-lg w-72 relative">
       <button onClick={close} className="absolute top-2 right-2 text-gray-300 hover:text-white">
         <X size={16} />
       </button>
