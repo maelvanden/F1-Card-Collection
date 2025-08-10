@@ -9,6 +9,7 @@ import { ShopPage } from './components/pages/ShopPage';
 import { MarketplacePage } from './components/pages/MarketplacePage';
 import { CardDetailsPage } from './components/pages/CardDetailsPage';
 import AchievementsPanel from './components/pages/AchievementsPanel';
+import ProfilePage from './components/pages/ProfilePage';
 
 export const AppRouter: React.FC = () => (
   <BrowserRouter>
@@ -22,6 +23,7 @@ export const AppRouter: React.FC = () => (
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/card/:id" element={<CardDetailsPage />} />
+      <Route path="/profile/:id" element={<ProfilePage />} />
     </Routes>
   </BrowserRouter>
 );

@@ -5,7 +5,7 @@ export const mockUser: User = {
   username: 'SpeedRacer',
   email: 'speedracer@f1cards.com',
   speedCoins: 50000,
-  registrationDate: new Date('2024-01-15')
+  registrationDate: new Date('2024-01-15').toISOString()
 };
 
 export const sampleCards: Card[] = [

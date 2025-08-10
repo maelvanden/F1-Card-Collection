@@ -13,6 +13,7 @@ interface GameStateContextType {
   updateSpeedCoins: (amount: number) => void;
   addCards: (cards: Card[]) => void;
   removeCard: (cardId: string) => void;
+  updateUserProfile: (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => void;
   unlockAchievement: (id: string, type?: 'daily' | 'normal') => void;
   claimAchievementReward: (id: string, type?: 'daily' | 'normal') => void;
   resetDailyChallenges: () => void;
@@ -117,7 +118,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     localStorage.setItem('authToken', token);
     setGameState(prev => ({
       ...prev,
-      user,
+      user: { ...user, bio: user.bio || '', avatarUrl: user.avatarUrl || '', bannerUrl: user.bannerUrl || '' },
       speedCoins: user.speedCoins,
       userCards: sampleCards,
       packsOpened: 0,
@@ -160,6 +161,13 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setGameState(prev => ({
       ...prev,
       userCards: prev.userCards.filter(card => card.id !== cardId)
+    }));
+  };
+
+  const updateUserProfile = (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => {
+    setGameState(prev => ({
+      ...prev,
+      user: prev.user ? { ...prev.user, ...data } : null
     }));
   };
 
@@ -291,6 +299,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       updateSpeedCoins,
       addCards,
       removeCard,
+      updateUserProfile,
       unlockAchievement,
       claimAchievementReward,
       resetDailyChallenges,

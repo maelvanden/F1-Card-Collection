@@ -3,7 +3,10 @@ export interface User {
   username: string;
   email: string;
   speedCoins: number;
-  registrationDate: Date;
+  registrationDate: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
+  bio?: string;
 }
 
 export interface Card {
