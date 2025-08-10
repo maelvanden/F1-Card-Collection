@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
 import { GameState, User, Card, Achievement } from '../types';
 import { sampleCards } from '../data/mockData';
 import { defaultAchievements } from '../data/achievements';
@@ -18,6 +18,8 @@ interface GameStateContextType {
   resetDailyChallenges: () => void;
   incrementPacksOpened: () => void;
   incrementCardsPurchased: () => void;
+  lastUnlockedAchievement: Achievement | null;
+  clearLastAchievement: () => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | undefined>(undefined);
@@ -33,6 +35,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   });
   const [achievements, setAchievements] = useState<Achievement[]>(defaultAchievements);
   const [dailyAchievements, setDailyAchievements] = useState<Achievement[]>(defaultDailyAchievements);
+  const [lastUnlockedAchievement, setLastUnlockedAchievement] = useState<Achievement | null>(null);
+  const unlockedRef = useRef<Record<string, boolean>>({});
 
   useEffect(() => {
     const savedState = localStorage.getItem('f1-game-state');
@@ -63,6 +67,23 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     localStorage.setItem('f1-daily-achievements', JSON.stringify(dailyAchievements));
   }, [dailyAchievements]);
+  useEffect(() => {
+    const combined = [...achievements, ...dailyAchievements];
+    if (Object.keys(unlockedRef.current).length === 0) {
+      combined.forEach(a => {
+        unlockedRef.current[a.id] = a.unlocked;
+      });
+      return;
+    }
+    combined.forEach(a => {
+      const wasUnlocked = unlockedRef.current[a.id];
+      if (a.unlocked && !wasUnlocked) {
+        setLastUnlockedAchievement(a);
+      }
+      unlockedRef.current[a.id] = a.unlocked;
+    });
+  }, [achievements, dailyAchievements]);
+  const clearLastAchievement = () => setLastUnlockedAchievement(null);
   const getParisDateString = () =>
     new Date().toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' });
 
@@ -258,6 +279,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       resetDailyChallenges,
       incrementPacksOpened,
       incrementCardsPurchased,
+      lastUnlockedAchievement,
+      clearLastAchievement,
     }}>
       {children}
     </GameStateContext.Provider>
