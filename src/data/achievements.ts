@@ -8,6 +8,7 @@ export const defaultAchievements: Achievement[] = [
     reward: 100,
     progress: 0,
     unlocked: false,
+    rewardClaimed: false,
   },
   {
     id: 'ten_cards',
@@ -16,5 +17,6 @@ export const defaultAchievements: Achievement[] = [
     reward: 200,
     progress: 0,
     unlocked: false,
+    rewardClaimed: false,
   },
 ];

@@ -93,7 +93,7 @@ const selectRarityByWeight = (packType: PackType): CardRarity => {
 };
 
 const getRandomCardType = (): CardType => {
-  const types = Object.values(CardType);
+  const types = Object.keys(cardPool) as CardType[];
   return types[Math.floor(Math.random() * types.length)];
 };
 
