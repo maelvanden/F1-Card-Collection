@@ -31,7 +31,10 @@ const AchievementsPanel: React.FC = () => {
   }, []);
 
   const renderAchievement = (ach: Achievement, type: 'daily' | 'normal') => (
-    <li key={ach.id} className="p-4 rounded-lg bg-white/5 border border-white/10">
+    <li
+      key={ach.id}
+      className="p-4 rounded-lg bg-black/40 border border-white/10 backdrop-blur-sm"
+    >
       <div className="flex justify-between items-center mb-2">
         <div>
           <p className="text-white font-semibold">{ach.description}</p>
@@ -56,29 +59,31 @@ const AchievementsPanel: React.FC = () => {
   );
 
   return (
-    <div className="p-6 bg-black/20 rounded-lg border border-white/10">
-      <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
-        <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
-        Succès
-      </h2>
-      <div className="mb-6">
-        <h3 className="text-xl font-bold text-white mb-2">Succès journaliers</h3>
-        <p className="text-gray-400 text-sm mb-4">Réinitialisation dans {timeLeft}</p>
-        <ul className="space-y-4">
-          {dailyAchievements.map((ach) => renderAchievement(ach, 'daily'))}
-          {dailyAchievements.length === 0 && (
-            <li className="text-gray-400">Aucun succès disponible.</li>
-          )}
-        </ul>
-      </div>
-      <div>
-        <h3 className="text-xl font-bold text-white mb-2">Succès</h3>
-        <ul className="space-y-4">
-          {achievements.map((ach) => renderAchievement(ach, 'normal'))}
-          {achievements.length === 0 && (
-            <li className="text-gray-400">Aucun succès disponible.</li>
-          )}
-        </ul>
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900 py-8 px-4">
+      <div className="max-w-4xl mx-auto p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+          <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
+          Succès
+        </h2>
+        <div className="mb-6">
+          <h3 className="text-xl font-bold text-white mb-2">Succès journaliers</h3>
+          <p className="text-gray-400 text-sm mb-4">Réinitialisation dans {timeLeft}</p>
+          <ul className="space-y-4">
+            {dailyAchievements.map((ach) => renderAchievement(ach, 'daily'))}
+            {dailyAchievements.length === 0 && (
+              <li className="text-gray-400">Aucun succès disponible.</li>
+            )}
+          </ul>
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-white mb-2">Succès</h3>
+          <ul className="space-y-4">
+            {achievements.map((ach) => renderAchievement(ach, 'normal'))}
+            {achievements.length === 0 && (
+              <li className="text-gray-400">Aucun succès disponible.</li>
+            )}
+          </ul>
+        </div>
       </div>
     </div>
   );
