@@ -164,31 +164,36 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }));
   };
 
-  const updateUserProfile = async (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => {
-    if (!gameState.token) {
-      setGameState(prev => ({
-        ...prev,
-        user: prev.user ? { ...prev.user, ...data } : null
-      }));
-      return;
-    }
+  const updateUserProfile = async (
+    data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>
+  ) => {
+    // Optimistically update the local user profile
+    setGameState(prev => ({
+      ...prev,
+      user: prev.user ? { ...prev.user, ...data } : null,
+    }));
+
+    const token = gameState.token;
+    if (!token) return;
+
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const res = await fetch(`${apiUrl}/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${gameState.token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error('Failed to update profile');
       const result = await res.json();
       setGameState(prev => ({
         ...prev,
-        user: result.user ? { ...prev.user!, ...result.user } : prev.user
+        user: result.user ? { ...prev.user!, ...result.user } : prev.user,
       }));
     } catch (err) {
+      // Keep optimistic update; just log the error
       console.error('Failed to update profile', err);
     }
   };
