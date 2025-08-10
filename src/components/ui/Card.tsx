@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card as CardType, CardRarity } from '../../types';
 
 interface CardProps {
@@ -30,16 +31,24 @@ export const Card: React.FC<CardProps> = ({
   showPrice = true,
   size = 'md'
 }) => {
+  const navigate = useNavigate();
   const sizeClasses = {
     sm: 'w-32 h-44',
     md: 'w-40 h-56',
     lg: 'w-48 h-72'
   };
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    }
+    navigate(`/card/${card.id}`);
+  };
+
   return (
     <div
       className={`${sizeClasses[size]} bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${rarityGlow[card.rarity]} border-2 border-transparent hover:border-red-300`}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <div className={`h-3 rounded-t-xl bg-gradient-to-r ${rarityColors[card.rarity]}`} />
       
