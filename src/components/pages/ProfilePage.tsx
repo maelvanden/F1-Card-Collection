@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGameStateContext } from '../../hooks/useGameState';
 import { bannerOptions } from '../../data/banners';
@@ -10,6 +10,18 @@ export const ProfilePage: React.FC = () => {
   const user = gameState.user;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [bannerUrl, setBannerUrl] = useState('');
+  const [bio, setBio] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      setAvatarUrl(user.avatarUrl || '');
+      setBannerUrl(user.bannerUrl || '');
+      setBio(user.bio || '');
+    }
+  }, [user]);
+
   if (!user || user.username !== username) {
     return <div className="text-white p-8">Profil introuvable</div>;
   }
@@ -19,14 +31,18 @@ export const ProfilePage: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        updateUserProfile({ avatarUrl: reader.result as string });
+        setAvatarUrl(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleBannerSelect = (url: string) => {
-    updateUserProfile({ bannerUrl: url });
+    setBannerUrl(url);
+  };
+
+  const handleSave = () => {
+    updateUserProfile({ avatarUrl, bannerUrl, bio });
   };
 
   const topCards = [...gameState.userCards]
@@ -36,8 +52,8 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="relative h-48 bg-gray-700">
-        {user.bannerUrl && (
-          <img src={user.bannerUrl} alt="Bannière" className="w-full h-full object-cover" />
+        {bannerUrl && (
+          <img src={bannerUrl} alt="Bannière" className="w-full h-full object-cover" />
         )}
         <div className="absolute top-2 right-2 flex space-x-2">
           {bannerOptions.map((url) => (
@@ -56,8 +72,8 @@ export const ProfilePage: React.FC = () => {
         <div className="relative flex items-end">
           <div className="relative -mt-16">
             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white">
-              {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full bg-gray-500" />
               )}
@@ -82,8 +98,8 @@ export const ProfilePage: React.FC = () => {
         <div className="mt-4">
           <h2 className="text-2xl font-bold">{user.username}</h2>
           <textarea
-            value={user.bio || ''}
-            onChange={(e) => updateUserProfile({ bio: e.target.value })}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
             placeholder="Ajoutez une biographie"
             className="w-full mt-2 p-2 bg-black/30 rounded"
           />
@@ -113,6 +129,9 @@ export const ProfilePage: React.FC = () => {
         <div className="mt-8 text-center">
           <Button>Échanger</Button>
         </div>
+      </div>
+      <div className="fixed bottom-4 right-4">
+        <Button onClick={handleSave}>Enregistrer</Button>
       </div>
     </div>
   );
