@@ -52,14 +52,27 @@ export const CardDetailsPage: React.FC = () => {
 
           <div className="flex flex-col">
             <h1 className="text-3xl font-bold text-white mb-4">{card.name}</h1>
-            <p className="text-gray-300 mb-6">{card.description}</p>
+            <div className="text-gray-300 mb-6 space-y-1 text-sm">
+              <p>Pilote historique de la F1.</p>
+              <p>Sept fois champion du monde.</p>
+              <p>Totalise 100 victoires et 345 podiums.</p>
+            </div>
 
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-white mb-2">Stats</h2>
               <ul className="text-gray-300 space-y-1 text-sm">
-                <li>Type : {card.type.toUpperCase()}</li>
-                <li>Rareté : {card.rarity.toUpperCase()}</li>
-                <li>Prix : {card.price.toLocaleString()} SC</li>
+                <li>Champion du monde Pilotes : 7</li>
+                <li>Nombre de courses gagnées : 100</li>
+                <li>Nombre de podium : 345</li>
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-white mb-2">Infos</h2>
+              <ul className="text-gray-300 space-y-1 text-sm">
+                <li>Type de carte : Pilote F1</li>
+                <li>Rareté : Légendaire</li>
+                <li>Valeur : 15 000</li>
               </ul>
             </div>
 
