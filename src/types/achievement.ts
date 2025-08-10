@@ -5,4 +5,5 @@ export interface Achievement {
   reward: number;
   progress: number;
   unlocked: boolean;
+  rewardClaimed: boolean;
 }

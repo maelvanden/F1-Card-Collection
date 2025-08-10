@@ -12,6 +12,7 @@ interface GameStateContextType {
   addCards: (cards: Card[]) => void;
   removeCard: (cardId: string) => void;
   unlockAchievement: (id: string) => void;
+  claimAchievementReward: (id: string) => void;
   resetDailyChallenges: () => void;
 }
 
@@ -34,7 +35,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
     const savedAchievements = localStorage.getItem('f1-achievements');
     if (savedAchievements) {
-      setAchievements(JSON.parse(savedAchievements));
+      const parsedAchievements: Achievement[] = JSON.parse(savedAchievements);
+      setAchievements(parsedAchievements.map(a => ({ rewardClaimed: false, ...a })));
     }
   }, []);
 
@@ -47,7 +49,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [achievements]);
 
   const resetDailyChallenges = () => {
-    setAchievements(prev => prev.map(a => ({ ...a, progress: 0, unlocked: false })));
+    setAchievements(prev => prev.map(a => ({ ...a, progress: 0, unlocked: false, rewardClaimed: false })));
     localStorage.setItem('f1-last-reset', new Date().toDateString());
   };
 
@@ -108,11 +110,6 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if (a.id !== 'ten_cards') return a;
 
         const progress = Math.min((cardCount / 10) * 100, 100);
-        const shouldUnlock = cardCount >= 10 && !a.unlocked;
-
-        if (shouldUnlock) {
-          updateSpeedCoins(a.reward);
-        }
 
         return {
           ...a,
@@ -127,15 +124,26 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setAchievements(prev => {
       const achievement = prev.find(a => a.id === id);
       if (!achievement || achievement.unlocked) return prev;
-      updateSpeedCoins(achievement.reward);
       return prev.map(a =>
         a.id === id ? { ...a, progress: 100, unlocked: true } : a
       );
     });
   };
 
+  const claimAchievementReward = (id: string) => {
+    setAchievements(prev =>
+      prev.map(a => {
+        if (a.id === id && a.unlocked && !a.rewardClaimed) {
+          updateSpeedCoins(a.reward);
+          return { ...a, rewardClaimed: true };
+        }
+        return a;
+      })
+    );
+  };
+
   return (
-    <GameStateContext.Provider value={{ gameState, achievements, login, logout, updateSpeedCoins, addCards, removeCard, unlockAchievement, resetDailyChallenges }}>
+    <GameStateContext.Provider value={{ gameState, achievements, login, logout, updateSpeedCoins, addCards, removeCard, unlockAchievement, claimAchievementReward, resetDailyChallenges }}>
       {children}
     </GameStateContext.Provider>
   );
