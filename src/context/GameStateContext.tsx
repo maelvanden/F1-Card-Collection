@@ -1,14 +1,18 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { GameState, User, Card } from '../types';
+import { GameState, User, Card, Achievement } from '../types';
 import { sampleCards } from '../data/mockData';
+import { defaultAchievements } from '../data/achievements';
 
 interface GameStateContextType {
   gameState: GameState;
+  achievements: Achievement[];
   login: (user: User) => void;
   logout: () => void;
   updateSpeedCoins: (amount: number) => void;
   addCards: (cards: Card[]) => void;
   removeCard: (cardId: string) => void;
+  unlockAchievement: (id: string) => void;
+  resetDailyChallenges: () => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | undefined>(undefined);
@@ -20,6 +24,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     speedCoins: 0,
     isAuthenticated: false
   });
+  const [achievements, setAchievements] = useState<Achievement[]>(defaultAchievements);
 
   useEffect(() => {
     const savedState = localStorage.getItem('f1-game-state');
@@ -27,11 +32,32 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const parsed = JSON.parse(savedState);
       setGameState(parsed);
     }
+    const savedAchievements = localStorage.getItem('f1-achievements');
+    if (savedAchievements) {
+      setAchievements(JSON.parse(savedAchievements));
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('f1-game-state', JSON.stringify(gameState));
   }, [gameState]);
+
+  useEffect(() => {
+    localStorage.setItem('f1-achievements', JSON.stringify(achievements));
+  }, [achievements]);
+
+  const resetDailyChallenges = () => {
+    setAchievements(prev => prev.map(a => ({ ...a, progress: 0, unlocked: false })));
+    localStorage.setItem('f1-last-reset', new Date().toDateString());
+  };
+
+  useEffect(() => {
+    const lastReset = localStorage.getItem('f1-last-reset');
+    const today = new Date().toDateString();
+    if (lastReset !== today) {
+      resetDailyChallenges();
+    }
+  }, []);
 
   const login = (user: User) => {
     setGameState(prev => ({
@@ -75,8 +101,12 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }));
   };
 
+  const unlockAchievement = (id: string) => {
+    setAchievements(prev => prev.map(a => a.id === id ? { ...a, unlocked: true } : a));
+  };
+
   return (
-    <GameStateContext.Provider value={{ gameState, login, logout, updateSpeedCoins, addCards, removeCard }}>
+    <GameStateContext.Provider value={{ gameState, achievements, login, logout, updateSpeedCoins, addCards, removeCard, unlockAchievement, resetDailyChallenges }}>
       {children}
     </GameStateContext.Provider>
   );

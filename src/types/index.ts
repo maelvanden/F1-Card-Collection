@@ -83,3 +83,5 @@ export interface GameState {
   speedCoins: number;
   isAuthenticated: boolean;
 }
+
+export * from './achievement';
