@@ -101,8 +101,27 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }));
   };
 
+  useEffect(() => {
+    const cardCount = gameState.userCards.length;
+    setAchievements(prev =>
+      prev.map(a =>
+        a.id === 'ten_cards'
+          ? {
+              ...a,
+              progress: Math.min((cardCount / 10) * 100, 100),
+              unlocked: a.unlocked || cardCount >= 10,
+            }
+          : a
+      )
+    );
+  }, [gameState.userCards.length]);
+
   const unlockAchievement = (id: string) => {
-    setAchievements(prev => prev.map(a => a.id === id ? { ...a, unlocked: true } : a));
+    setAchievements(prev =>
+      prev.map(a =>
+        a.id === id ? { ...a, progress: 100, unlocked: true } : a
+      )
+    );
   };
 
   return (
