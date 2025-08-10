@@ -9,12 +9,14 @@ import { useNavigate } from 'react-router-dom';
 
 export const ShopPage: React.FC = () => {
   const navigate = useNavigate();
-  const { gameState, updateSpeedCoins, addCards } = useGameStateContext();
+  const { gameState, updateSpeedCoins, addCards, unlockAchievement, incrementCardsPurchased } = useGameStateContext();
 
   const handleBuyCard = (card: CardType) => {
     if (gameState.speedCoins >= card.price) {
       updateSpeedCoins(-card.price);
       addCards([{ ...card, obtainedDate: new Date() }]);
+      incrementCardsPurchased();
+      unlockAchievement('daily_shop_card', 'daily');
       console.log('Carte achetée:', card.name);
     }
   };
