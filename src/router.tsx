@@ -9,6 +9,7 @@ import { ShopPage } from './components/pages/ShopPage';
 import { MarketplacePage } from './components/pages/MarketplacePage';
 import { CardDetailsPage } from './components/pages/CardDetailsPage';
 import AchievementsPanel from './components/pages/AchievementsPanel';
+import AchievementToast from './components/ui/AchievementToast';
 
 export const AppRouter: React.FC = () => (
   <BrowserRouter>
@@ -23,6 +24,7 @@ export const AppRouter: React.FC = () => (
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/card/:id" element={<CardDetailsPage />} />
     </Routes>
+    <AchievementToast />
   </BrowserRouter>
 );
 

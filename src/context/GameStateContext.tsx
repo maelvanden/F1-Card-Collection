@@ -41,18 +41,30 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     const savedState = localStorage.getItem('f1-game-state');
     if (savedState) {
-      const parsed = JSON.parse(savedState);
-      setGameState({ packsOpened: 0, cardsPurchased: 0, ...parsed });
+      try {
+        const parsed = JSON.parse(savedState);
+        setGameState({ packsOpened: 0, cardsPurchased: 0, ...parsed });
+      } catch (error) {
+        console.error('Failed to parse saved game state', error);
+      }
     }
     const savedAchievements = localStorage.getItem('f1-achievements');
     if (savedAchievements) {
-      const parsedAchievements: Achievement[] = JSON.parse(savedAchievements);
-      setAchievements(parsedAchievements.map(a => ({ rewardClaimed: false, ...a })));
+      try {
+        const parsedAchievements: Achievement[] = JSON.parse(savedAchievements);
+        setAchievements(parsedAchievements.map(a => ({ rewardClaimed: false, ...a })));
+      } catch (error) {
+        console.error('Failed to parse achievements', error);
+      }
     }
     const savedDaily = localStorage.getItem('f1-daily-achievements');
     if (savedDaily) {
-      const parsedDaily: Achievement[] = JSON.parse(savedDaily);
-      setDailyAchievements(parsedDaily.map(a => ({ rewardClaimed: false, ...a })));
+      try {
+        const parsedDaily: Achievement[] = JSON.parse(savedDaily);
+        setDailyAchievements(parsedDaily.map(a => ({ rewardClaimed: false, ...a })));
+      } catch (error) {
+        console.error('Failed to parse daily achievements', error);
+      }
     }
   }, []);
 
