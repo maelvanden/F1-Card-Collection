@@ -13,7 +13,7 @@ interface GameStateContextType {
   updateSpeedCoins: (amount: number) => void;
   addCards: (cards: Card[]) => void;
   removeCard: (cardId: string) => void;
-  updateUserProfile: (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => void;
+  updateUserProfile: (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => Promise<void>;
   unlockAchievement: (id: string, type?: 'daily' | 'normal') => void;
   claimAchievementReward: (id: string, type?: 'daily' | 'normal') => void;
   resetDailyChallenges: () => void;
@@ -164,11 +164,33 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }));
   };
 
-  const updateUserProfile = (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => {
-    setGameState(prev => ({
-      ...prev,
-      user: prev.user ? { ...prev.user, ...data } : null
-    }));
+  const updateUserProfile = async (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => {
+    if (!gameState.token) {
+      setGameState(prev => ({
+        ...prev,
+        user: prev.user ? { ...prev.user, ...data } : null
+      }));
+      return;
+    }
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const res = await fetch(`${apiUrl}/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${gameState.token}`
+        },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error('Failed to update profile');
+      const result = await res.json();
+      setGameState(prev => ({
+        ...prev,
+        user: result.user ? { ...prev.user!, ...result.user } : prev.user
+      }));
+    } catch (err) {
+      console.error('Failed to update profile', err);
+    }
   };
 
   const incrementPacksOpened = () => {

@@ -41,8 +41,8 @@ export const ProfilePage: React.FC = () => {
     setBannerUrl(url);
   };
 
-  const handleSave = () => {
-    updateUserProfile({ avatarUrl, bannerUrl, bio });
+  const handleSave = async () => {
+    await updateUserProfile({ avatarUrl, bannerUrl, bio });
   };
 
   const topCards = [...gameState.userCards]
