@@ -72,7 +72,7 @@ export const CardDetailsPage: React.FC = () => {
               <ul className="text-gray-300 space-y-1 text-sm">
                 <li>Type de carte : Pilote F1</li>
                 <li>Rareté : Légendaire</li>
-                <li>Valeur : 15 000</li>
+                <li>Valeur : 15 000</li>
               </ul>
             </div>
 
