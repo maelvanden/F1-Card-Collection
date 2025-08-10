@@ -104,15 +104,22 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     const cardCount = gameState.userCards.length;
     setAchievements(prev =>
-      prev.map(a =>
-        a.id === 'ten_cards'
-          ? {
-              ...a,
-              progress: Math.min((cardCount / 10) * 100, 100),
-              unlocked: a.unlocked || cardCount >= 10,
-            }
-          : a
-      )
+      prev.map(a => {
+        if (a.id !== 'ten_cards') return a;
+
+        const progress = Math.min((cardCount / 10) * 100, 100);
+        const shouldUnlock = cardCount >= 10 && !a.unlocked;
+
+        if (shouldUnlock) {
+          updateSpeedCoins(a.reward);
+        }
+
+        return {
+          ...a,
+          progress,
+          unlocked: a.unlocked || cardCount >= 10,
+        };
+      })
     );
   }, [gameState.userCards.length]);
 
