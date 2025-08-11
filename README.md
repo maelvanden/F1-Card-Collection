@@ -23,13 +23,18 @@ Avant de démarrer le serveur, vous devez définir certaines variables d'environ
 export JWT_SECRET=mon-super-secret
 export ALLOWED_ORIGINS=https://exemple.com,http://localhost:5173
 export DB_PATH=/var/lib/f1-card-collection/data.sqlite
+export PORT=3000
 npm run server
 ```
+
+`JWT_SECRET` est le secret utilisé pour signer les tokens JWT.
 
 `ALLOWED_ORIGINS` définit la liste des origines autorisées par CORS (séparées par des virgules).
 Si elle n'est pas définie, `http://localhost:5173` est utilisée par défaut.
 
 `DB_PATH` définit le chemin du fichier SQLite. Il vaut `data.sqlite` par défaut et doit pointer vers un emplacement persistant en production, par exemple `/var/lib/f1-card-collection/data.sqlite`.
+
+`PORT` définit le port d'écoute du serveur. La valeur par défaut est `3000`.
 
 ## Scripts
 
