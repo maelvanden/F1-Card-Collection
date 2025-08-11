@@ -68,6 +68,40 @@ npm start
 Cette commande compile le frontend (`npm run build`) puis démarre le serveur en
 production.
 
+## Déploiement sur Hostinger
+
+Sur Hostinger, définissez les variables d'environnement depuis le panneau **Advanced > Environment variables** ou via la ligne de commande. Assurez-vous notamment de configurer `ALLOWED_ORIGINS` avec votre domaine :
+
+```bash
+export ALLOWED_ORIGINS="https://f1cardcollection.mvcraft.fr"
+```
+
+Les variables `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_DATABASE`, `MYSQL_USER` et `MYSQL_PASSWORD` doivent correspondre aux paramètres de votre base MySQL Hostinger. Elles permettent au serveur de se connecter à la base pour stocker les utilisateurs.
+
+Avant de lancer l'application, créez la table `users` :
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) UNIQUE,
+  email VARCHAR(255) UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  speedCoins INT DEFAULT 0,
+  registrationDate VARCHAR(255),
+  avatarUrl VARCHAR(255),
+  bannerUrl VARCHAR(255),
+  bio TEXT
+);
+```
+
+Ensuite, démarrez l'application avec :
+
+```bash
+npm start
+```
+
+Cette commande construit le frontend et lance le serveur en production.
+
 ## Contribuer
 
 Les contributions sont les bienvenues ! Ouvrez une issue pour discuter d'une nouvelle fonctionnalité ou corriger un bug, puis proposez une pull request.
