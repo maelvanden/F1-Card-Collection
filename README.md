@@ -36,6 +36,7 @@ Si elle n'est pas définie, `http://localhost:5173` est utilisée par défaut.
 - `npm run dev` : démarre un serveur de développement avec rechargement à chaud.
 - `npm run build` : génère la version de production dans le dossier `dist/`.
 - `npm run preview` : lance un serveur pour prévisualiser la version de production.
+- `npm start` : lance le serveur en production.
 - `npm test` : exécute les tests unitaires avec Vitest.
 
 ## Contribuer
