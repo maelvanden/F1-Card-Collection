@@ -25,7 +25,8 @@ app.use(
 );
 app.use(express.json());
 
-const db = new Database('data.sqlite');
+const DB_PATH = process.env.DB_PATH || 'data.sqlite';
+const db = new Database(DB_PATH);
 
 db.exec(`CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
