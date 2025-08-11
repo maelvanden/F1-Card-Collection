@@ -76,6 +76,12 @@ Sur Hostinger, définissez les variables d'environnement depuis le panneau **Adv
 export ALLOWED_ORIGINS="https://f1cardcollection.mvcraft.fr"
 ```
 
+Pour autoriser plusieurs domaines, séparez-les par des virgules :
+
+```bash
+export ALLOWED_ORIGINS="https://f1cardcollection.mvcraft.fr,https://admin.f1cards.fr"
+```
+
 Les variables `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_DATABASE`, `MYSQL_USER` et `MYSQL_PASSWORD` doivent correspondre aux paramètres de votre base MySQL Hostinger. Elles permettent au serveur de se connecter à la base pour stocker les utilisateurs.
 
 Avant de lancer l'application, créez la table `users` :
