@@ -98,6 +98,33 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+app.get('/api/profile', authMiddleware, (req, res) => {
+  try {
+    const row = db
+      .prepare(
+        'SELECT id, username, email, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM users WHERE id = ?'
+      )
+      .get(req.userId);
+    if (!row) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const user = {
+      id: String(row.id),
+      username: row.username,
+      email: row.email,
+      speedCoins: row.speedCoins,
+      registrationDate: row.registrationDate,
+      avatarUrl: row.avatarUrl || '',
+      bannerUrl: row.bannerUrl || '',
+      bio: row.bio || '',
+    };
+    res.json({ user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 app.put('/api/profile', authMiddleware, (req, res) => {
   const { avatarUrl = '', bannerUrl = '', bio = '' } = req.body;
   try {

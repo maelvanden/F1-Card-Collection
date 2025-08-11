@@ -71,6 +71,40 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token && !gameState.user) {
+      const fetchProfile = async () => {
+        try {
+          const apiUrl = import.meta.env.VITE_API_URL || '/api';
+          const res = await fetch(`${apiUrl}/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setGameState(prev => ({
+              ...prev,
+              user: data.user
+                ? {
+                    ...data.user,
+                    bio: data.user.bio || '',
+                    avatarUrl: data.user.avatarUrl || '',
+                    bannerUrl: data.user.bannerUrl || '',
+                  }
+                : prev.user,
+              speedCoins: data.user ? data.user.speedCoins : prev.speedCoins,
+              isAuthenticated: true,
+              token,
+            }));
+          }
+        } catch (err) {
+          console.error('Failed to fetch profile', err);
+        }
+      };
+      fetchProfile();
+    }
+  }, [gameState.user]);
+
+  useEffect(() => {
     localStorage.setItem('f1-game-state', JSON.stringify(gameState));
   }, [gameState]);
 
