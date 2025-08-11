@@ -17,13 +17,16 @@ npm install
 
 ### Configuration
 
-Avant de démarrer le serveur, vous devez définir la variable d'environnement `JWT_SECRET` utilisée pour signer les jetons JWT.
-Par exemple :
+Avant de démarrer le serveur, vous devez définir certaines variables d'environnement :
 
 ```bash
 export JWT_SECRET=mon-super-secret
+export ALLOWED_ORIGINS=https://exemple.com,http://localhost:5173
 npm run server
 ```
+
+`ALLOWED_ORIGINS` définit la liste des origines autorisées par CORS (séparées par des virgules).
+Si elle n'est pas définie, `http://localhost:5173` est utilisée par défaut.
 
 ## Scripts
 
