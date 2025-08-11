@@ -1,8 +1,11 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import Database from 'better-sqlite3';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -26,7 +29,10 @@ try { db.prepare('ALTER TABLE users ADD COLUMN avatarUrl TEXT').run(); } catch {
 try { db.prepare('ALTER TABLE users ADD COLUMN bannerUrl TEXT').run(); } catch {}
 try { db.prepare('ALTER TABLE users ADD COLUMN bio TEXT').run(); } catch {}
 
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
+const { JWT_SECRET } = process.env;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 app.post('/api/register', async (req, res) => {
   const { username, email, password, avatarUrl = '', bannerUrl = '', bio = '' } = req.body;
