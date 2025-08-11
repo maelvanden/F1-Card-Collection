@@ -5,13 +5,12 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import path from 'path';
+import { getAllowedOrigins } from './allowedOrigins.js';
 
 dotenv.config();
 
 const app = express();
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
-  : ['http://localhost:5173'];
+const allowedOrigins = getAllowedOrigins();
 
 app.use(
   cors({
