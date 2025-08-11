@@ -15,6 +15,16 @@ cd F1-Card-Collection
 npm install
 ```
 
+### Configuration
+
+Avant de démarrer le serveur, vous devez définir la variable d'environnement `JWT_SECRET` utilisée pour signer les jetons JWT.
+Par exemple :
+
+```bash
+export JWT_SECRET=mon-super-secret
+npm run server
+```
+
 ## Scripts
 
 - `npm run dev` : démarre un serveur de développement avec rechargement à chaud.
