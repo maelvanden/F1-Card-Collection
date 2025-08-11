@@ -4,6 +4,7 @@ import Database from 'better-sqlite3';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
+import path from 'path';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.static('dist'));
 
 const DB_PATH = process.env.DB_PATH || 'data.sqlite';
 const db = new Database(DB_PATH);
@@ -173,6 +175,10 @@ app.put('/api/profile', authMiddleware, (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('dist/index.html'));
 });
 
 const PORT = process.env.PORT || 3001;
