@@ -33,10 +33,29 @@ const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
 const MYSQL_PORT = process.env.MYSQL_PORT;
+const DB_CLIENT = (process.env.DB_CLIENT || 'auto').toLowerCase();
 
 let db;
-const useMySQL = Boolean(MYSQL_HOST);
-const usePostgres = !useMySQL && Boolean(DATABASE_URL);
+let dbClient;
+switch (DB_CLIENT) {
+  case 'mysql':
+  case 'postgres':
+  case 'sqlite':
+    dbClient = DB_CLIENT;
+    break;
+  default:
+    if (MYSQL_HOST) {
+      dbClient = 'mysql';
+    } else if (DATABASE_URL) {
+      dbClient = 'postgres';
+    } else {
+      dbClient = 'sqlite';
+    }
+}
+
+const useMySQL = dbClient === 'mysql';
+const usePostgres = dbClient === 'postgres';
+console.log(`Using ${dbClient} database`);
 
 if (useMySQL) {
   const mysql = await import('mysql2/promise');
