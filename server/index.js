@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { getAllowedOrigins } from './allowedOrigins.js';
 
@@ -352,11 +353,16 @@ app.put('/api/profile', authMiddleware, async (req, res) => {
   }
 });
 
-app.get('*', (req, res) => {
-  if (req.path.startsWith('/assets/')) {
-    return res.status(404).end();
+app.use((req, res) => {
+  const filePath = path.join(distPath, req.path);
+
+  if (fs.existsSync(filePath)) {
+    return res.sendFile(filePath);
   }
-  res.sendFile(path.join(distPath, 'index.html'));
+
+  // Log missing paths to make debugging easier in production.
+  console.warn('Path not found:', filePath);
+  res.status(404).end();
 });
 
 const PORT = process.env.PORT || 3001;
