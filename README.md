@@ -47,6 +47,8 @@ npm run server
 
 `PORT` définit le port d'écoute du serveur. La valeur par défaut est `3000`.
 
+`DIST_PATH` (facultatif) indique le chemin vers le dossier des fichiers compilés. S'il est laissé vide ou non défini, le serveur utilisera `../dist` par défaut.
+
 ## Scripts
 
 - `npm run dev` : démarre un serveur de développement avec rechargement à chaud.
@@ -107,6 +109,15 @@ npm start
 ```
 
 Cette commande construit le frontend et lance le serveur en production.
+
+## Déploiement sur Render
+
+Pour déployer sur [Render](https://render.com/), configurez le service web avec :
+
+- **Build command** : `npm run build`
+- **Start command** : `node server/index.js` (ou `npm run start` si la construction est incluse)
+
+Laissez la variable d'environnement `DIST_PATH` vide afin que le serveur serve par défaut le dossier `../dist`.
 
 ## Contribuer
 
