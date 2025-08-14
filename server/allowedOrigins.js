@@ -4,5 +4,5 @@ export function getAllowedOrigins(env = process.env.ALLOWED_ORIGINS) {
         .split(',')
         .map((o) => o.trim())
         .filter(Boolean)
-    : ['http://localhost:5173'];
+    : ['https://f1-card-collection.onrender.co'];
 }
