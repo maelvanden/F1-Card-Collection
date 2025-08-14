@@ -25,17 +25,13 @@ console.log('Resolved dist path:', distPath);
 const app = express();
 const allowedOrigins = getAllowedOrigins();
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) =>
+    !origin || allowedOrigins.includes(origin)
+      ? callback(null, true)
+      : callback(new Error('Not allowed by CORS')),
+};
+app.use('/api', cors(corsOptions));
 app.use(express.json());
 app.use(express.static(distPath));
 
