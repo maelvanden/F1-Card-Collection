@@ -8,6 +8,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { getAllowedOrigins } from './allowedOrigins.js';
 
+dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distPath = process.env.DIST_PATH
@@ -18,8 +20,6 @@ const distPath = process.env.DIST_PATH
 // verify the server is serving the expected directory at runtime.
 console.log('Working directory:', process.cwd());
 console.log('Resolved dist path:', distPath);
-
-dotenv.config();
 
 const app = express();
 const allowedOrigins = getAllowedOrigins();
