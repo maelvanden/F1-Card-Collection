@@ -7,6 +7,9 @@ import cors from 'cors';
 import path from 'path';
 import { getAllowedOrigins } from './allowedOrigins.js';
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const distPath = path.join(__dirname, '../dist');
+
 dotenv.config();
 
 const app = express();
@@ -24,7 +27,7 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(express.static('dist'));
+app.use(express.static(distPath));
 
 const DATABASE_URL = process.env.DATABASE_URL;
 const DB_PATH = process.env.DB_PATH || 'data.sqlite';
@@ -341,7 +344,7 @@ app.put('/api/profile', authMiddleware, async (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve('dist/index.html'));
+  res.sendFile(path.join(distPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3001;
