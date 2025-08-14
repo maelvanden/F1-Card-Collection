@@ -5,9 +5,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { getAllowedOrigins } from './allowedOrigins.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const distPath = process.env.DIST_PATH
   ? path.resolve(process.env.DIST_PATH)
   : path.join(__dirname, '../dist');
