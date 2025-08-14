@@ -14,6 +14,11 @@ const distPath = process.env.DIST_PATH
   ? path.resolve(process.env.DIST_PATH)
   : path.join(__dirname, '../dist');
 
+// Log the current working directory and the resolved dist path so we can
+// verify the server is serving the expected directory at runtime.
+console.log('Working directory:', process.cwd());
+console.log('Resolved dist path:', distPath);
+
 dotenv.config();
 
 const app = express();

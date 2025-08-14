@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.DS_Store
+.git
+.gitignore
+Dockerfile
+
+# Build outputs
+build
+
+# We'll rebuild dist in the image
+/dist
