@@ -8,7 +8,9 @@ import path from 'path';
 import { getAllowedOrigins } from './allowedOrigins.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const distPath = path.join(__dirname, '../dist');
+const distPath = process.env.DIST_PATH
+  ? path.resolve(process.env.DIST_PATH)
+  : path.join(__dirname, '../dist');
 
 dotenv.config();
 
@@ -344,6 +346,9 @@ app.put('/api/profile', authMiddleware, async (req, res) => {
 });
 
 app.get('*', (req, res) => {
+  if (req.path.startsWith('/assets/')) {
+    return res.status(404).end();
+  }
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
