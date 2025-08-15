@@ -33,7 +33,7 @@ npm run server
 
 `JWT_SECRET` est le secret utilisé pour signer les tokens JWT.
 
-`ALLOWED_ORIGINS` définit la liste des origines autorisées par CORS (séparées par des virgules). Pour autoriser plusieurs origines, séparez-les par des virgules, par exemple : `https://mon-domaine.com,https://admin.mon-domaine.com`. Si elle n'est pas définie, `http://localhost:5173` est utilisée par défaut.
+`ALLOWED_ORIGINS` définit la liste des origines autorisées par CORS (séparées par des virgules). Pour autoriser plusieurs origines, séparez-les par des virgules, par exemple : `https://mon-domaine.com,https://admin.mon-domaine.com`. Si elle n'est pas définie, `https://f1-card-collection.onrender.com` est utilisée par défaut. Pour éviter les erreurs de domaine, il est recommandé de définir explicitement `ALLOWED_ORIGINS` avec vos propres URLs.
 
 `MYSQL_HOST` spécifie l'hôte du serveur MySQL.
 
