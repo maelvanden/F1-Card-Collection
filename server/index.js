@@ -82,10 +82,16 @@ if (useMySQL) {
     password VARCHAR(255) NOT NULL,
     speedCoins INT DEFAULT 0,
     registrationDate VARCHAR(255),
-    avatarUrl VARCHAR(255),
-    bannerUrl VARCHAR(255),
+    avatarUrl TEXT,
+    bannerUrl TEXT,
     bio TEXT
   )`);
+  try {
+    await db.query('ALTER TABLE users MODIFY avatarUrl TEXT');
+  } catch {}
+  try {
+    await db.query('ALTER TABLE users MODIFY bannerUrl TEXT');
+  } catch {}
 } else if (usePostgres) {
   const pg = await import('pg');
   const { Pool } = pg;
@@ -117,6 +123,27 @@ if (useMySQL) {
   try { db.prepare('ALTER TABLE users ADD COLUMN avatarUrl TEXT').run(); } catch {}
   try { db.prepare('ALTER TABLE users ADD COLUMN bannerUrl TEXT').run(); } catch {}
   try { db.prepare('ALTER TABLE users ADD COLUMN bio TEXT').run(); } catch {}
+  const cols = db.prepare('PRAGMA table_info(users)').all();
+  const needsMigration = cols.some(
+    (c) => ['avatarUrl', 'bannerUrl'].includes(c.name) && c.type.toUpperCase() !== 'TEXT'
+  );
+  if (needsMigration) {
+    db.exec('ALTER TABLE users RENAME TO _users_old;');
+    db.exec(`CREATE TABLE users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE,
+      email TEXT UNIQUE,
+      password TEXT NOT NULL,
+      speedCoins INTEGER DEFAULT 0,
+      registrationDate TEXT,
+      avatarUrl TEXT,
+      bannerUrl TEXT,
+      bio TEXT
+    )`);
+    db.exec(`INSERT INTO users (id, username, email, password, speedCoins, registrationDate, avatarUrl, bannerUrl, bio)
+             SELECT id, username, email, password, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM _users_old;`);
+    db.exec('DROP TABLE _users_old;');
+  }
 }
 
 const { JWT_SECRET } = process.env;
