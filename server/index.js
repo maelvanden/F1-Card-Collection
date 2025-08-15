@@ -333,50 +333,80 @@ app.get('/api/profile', authMiddleware, async (req, res) => {
 });
 
 app.put('/api/profile', authMiddleware, upload.single('avatar'), async (req, res) => {
-  const { bannerUrl = '', bio = '' } = req.body;
-  const avatarPath = req.file ? `/uploads/${req.file.filename}` : null;
+  const { bannerUrl, bio } = req.body;
+  const avatarPath = req.file ? `/uploads/${req.file.filename}` : undefined;
   try {
     let row;
     if (useMySQL) {
-      let query = 'UPDATE users SET bannerUrl = ?, bio = ?';
-      const params = [bannerUrl, bio];
+      const fields = [];
+      const params = [];
+      if (bannerUrl !== undefined) {
+        fields.push('bannerUrl = ?');
+        params.push(bannerUrl);
+      }
+      if (bio !== undefined) {
+        fields.push('bio = ?');
+        params.push(bio);
+      }
       if (avatarPath) {
-        query += ', avatarUrl = ?';
+        fields.push('avatarUrl = ?');
         params.push(avatarPath);
       }
-      query += ' WHERE id = ?';
-      params.push(req.userId);
-      await db.execute(query, params);
+      if (fields.length) {
+        const query = `UPDATE users SET ${fields.join(', ')} WHERE id = ?`;
+        params.push(req.userId);
+        await db.execute(query, params);
+      }
       const [rows] = await db.execute(
         'SELECT id, username, email, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM users WHERE id = ?',
         [req.userId]
       );
       row = rows[0];
     } else if (usePostgres) {
-      let query = 'UPDATE users SET bannerUrl = $1, bio = $2';
-      const params = [bannerUrl, bio];
+      const fields = [];
+      const params = [];
+      if (bannerUrl !== undefined) {
+        fields.push(`bannerUrl = $${params.length + 1}`);
+        params.push(bannerUrl);
+      }
+      if (bio !== undefined) {
+        fields.push(`bio = $${params.length + 1}`);
+        params.push(bio);
+      }
       if (avatarPath) {
-        query += ', avatarUrl = $' + (params.length + 1);
+        fields.push(`avatarUrl = $${params.length + 1}`);
         params.push(avatarPath);
       }
-      query += ' WHERE id = $' + (params.length + 1);
-      params.push(req.userId);
-      await db.query(query, params);
+      if (fields.length) {
+        const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${params.length + 1}`;
+        params.push(req.userId);
+        await db.query(query, params);
+      }
       const result = await db.query(
         'SELECT id, username, email, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM users WHERE id = $1',
         [req.userId]
       );
       row = result.rows[0];
     } else {
-      let query = 'UPDATE users SET bannerUrl = ?, bio = ?';
-      const params = [bannerUrl, bio];
+      const fields = [];
+      const params = [];
+      if (bannerUrl !== undefined) {
+        fields.push('bannerUrl = ?');
+        params.push(bannerUrl);
+      }
+      if (bio !== undefined) {
+        fields.push('bio = ?');
+        params.push(bio);
+      }
       if (avatarPath) {
-        query += ', avatarUrl = ?';
+        fields.push('avatarUrl = ?');
         params.push(avatarPath);
       }
-      query += ' WHERE id = ?';
-      params.push(req.userId);
-      db.prepare(query).run(...params);
+      if (fields.length) {
+        const query = `UPDATE users SET ${fields.join(', ')} WHERE id = ?`;
+        params.push(req.userId);
+        db.prepare(query).run(...params);
+      }
       row = db
         .prepare('SELECT id, username, email, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM users WHERE id = ?')
         .get(req.userId);
