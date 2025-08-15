@@ -96,8 +96,8 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(255) NOT NULL,
   speedCoins INT DEFAULT 0,
   registrationDate VARCHAR(255),
-  avatarUrl VARCHAR(255),
-  bannerUrl VARCHAR(255),
+  avatarUrl TEXT,
+  bannerUrl TEXT,
   bio TEXT
 );
 ```
