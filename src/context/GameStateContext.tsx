@@ -89,7 +89,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         try {
           const apiUrl = import.meta.env.VITE_API_URL || '/api';
           const res = await fetch(`${apiUrl}/profile`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `${token}` },
           });
           if (res.ok) {
             const data = await res.json();
@@ -246,7 +246,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const res = await fetch(`${apiUrl}/profile`, {
         method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${token}`,
         },
         body: formData,
       });
