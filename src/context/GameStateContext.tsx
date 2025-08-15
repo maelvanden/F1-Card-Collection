@@ -13,7 +13,9 @@ interface GameStateContextType {
   updateSpeedCoins: (amount: number) => void;
   addCards: (cards: Card[]) => void;
   removeCard: (cardId: string) => void;
-  updateUserProfile: (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => Promise<void>;
+  updateUserProfile: (
+    data: { bio?: string; bannerUrl?: string; avatarFile?: File | null }
+  ) => Promise<void>;
   profileUpdateStatus: 'idle' | 'loading' | 'success' | 'error';
   unlockAchievement: (id: string, type?: 'daily' | 'normal') => void;
   claimAchievementReward: (id: string, type?: 'daily' | 'normal') => void;
@@ -209,14 +211,20 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   const updateUserProfile = async (
-    data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>
+    data: { bio?: string; bannerUrl?: string; avatarFile?: File | null }
   ) => {
     const previousUser = gameState.user ? { ...gameState.user } : null;
 
-    // Optimistically update the local user profile
+    // Optimistically update the local user profile (except avatar file)
     setGameState(prev => ({
       ...prev,
-      user: prev.user ? { ...prev.user, ...data } : null,
+      user: prev.user
+        ? {
+            ...prev.user,
+            ...(data.bio !== undefined ? { bio: data.bio } : {}),
+            ...(data.bannerUrl !== undefined ? { bannerUrl: data.bannerUrl } : {}),
+          }
+        : null,
     }));
 
     const token = gameState.token;
@@ -231,13 +239,16 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const formData = new FormData();
+      if (data.bio !== undefined) formData.append('bio', data.bio);
+      if (data.bannerUrl !== undefined) formData.append('bannerUrl', data.bannerUrl);
+      if (data.avatarFile) formData.append('avatar', data.avatarFile);
       const res = await fetch(`${apiUrl}/profile`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: formData,
       });
       if (!res.ok) throw new Error('Failed to update profile');
       const result = await res.json();

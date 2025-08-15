@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { getAllowedOrigins } from './allowedOrigins.js';
 
@@ -34,6 +35,17 @@ const corsOptions = {
 app.use('/api', cors(corsOptions));
 app.use(express.json());
 app.use(express.static(distPath));
+const uploadDir = path.join(__dirname, 'uploads');
+fs.mkdirSync(uploadDir, { recursive: true });
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, uploadDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`);
+  },
+});
+const upload = multer({ storage });
+app.use('/uploads', express.static(uploadDir));
 
 const DATABASE_URL = process.env.DATABASE_URL;
 const DB_PATH = process.env.DB_PATH || 'data.sqlite';
@@ -320,41 +332,51 @@ app.get('/api/profile', authMiddleware, async (req, res) => {
   }
 });
 
-app.put('/api/profile', authMiddleware, async (req, res) => {
-  const { avatarUrl = '', bannerUrl = '', bio = '' } = req.body;
+app.put('/api/profile', authMiddleware, upload.single('avatar'), async (req, res) => {
+  const { bannerUrl = '', bio = '' } = req.body;
+  const avatarPath = req.file ? `/uploads/${req.file.filename}` : null;
   try {
     let row;
     if (useMySQL) {
-      await db.execute('UPDATE users SET avatarUrl = ?, bannerUrl = ?, bio = ? WHERE id = ?', [
-        avatarUrl,
-        bannerUrl,
-        bio,
-        req.userId,
-      ]);
+      let query = 'UPDATE users SET bannerUrl = ?, bio = ?';
+      const params = [bannerUrl, bio];
+      if (avatarPath) {
+        query += ', avatarUrl = ?';
+        params.push(avatarPath);
+      }
+      query += ' WHERE id = ?';
+      params.push(req.userId);
+      await db.execute(query, params);
       const [rows] = await db.execute(
         'SELECT id, username, email, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM users WHERE id = ?',
         [req.userId]
       );
       row = rows[0];
     } else if (usePostgres) {
-      await db.query('UPDATE users SET avatarUrl = $1, bannerUrl = $2, bio = $3 WHERE id = $4', [
-        avatarUrl,
-        bannerUrl,
-        bio,
-        req.userId,
-      ]);
+      let query = 'UPDATE users SET bannerUrl = $1, bio = $2';
+      const params = [bannerUrl, bio];
+      if (avatarPath) {
+        query += ', avatarUrl = $' + (params.length + 1);
+        params.push(avatarPath);
+      }
+      query += ' WHERE id = $' + (params.length + 1);
+      params.push(req.userId);
+      await db.query(query, params);
       const result = await db.query(
         'SELECT id, username, email, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM users WHERE id = $1',
         [req.userId]
       );
       row = result.rows[0];
     } else {
-      db.prepare('UPDATE users SET avatarUrl = ?, bannerUrl = ?, bio = ? WHERE id = ?').run(
-        avatarUrl,
-        bannerUrl,
-        bio,
-        req.userId
-      );
+      let query = 'UPDATE users SET bannerUrl = ?, bio = ?';
+      const params = [bannerUrl, bio];
+      if (avatarPath) {
+        query += ', avatarUrl = ?';
+        params.push(avatarPath);
+      }
+      query += ' WHERE id = ?';
+      params.push(req.userId);
+      db.prepare(query).run(...params);
       row = db
         .prepare('SELECT id, username, email, speedCoins, registrationDate, avatarUrl, bannerUrl, bio FROM users WHERE id = ?')
         .get(req.userId);
@@ -367,7 +389,7 @@ app.put('/api/profile', authMiddleware, async (req, res) => {
       registrationDate: row.registrationDate,
       avatarUrl: row.avatarUrl || '',
       bannerUrl: row.bannerUrl || '',
-      bio: row.bio || ''
+      bio: row.bio || '',
     };
     res.json({ user });
   } catch (err) {
