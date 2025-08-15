@@ -22,7 +22,9 @@ describe('getAllowedOrigins', () => {
     ).toEqual(['https://a.com', 'https://b.com']);
   });
 
-  it('falls back to localhost when undefined', () => {
-    expect(getAllowedOrigins(undefined)).toEqual(['http://localhost:5173']);
+  it('falls back to the default domain when undefined', () => {
+    expect(getAllowedOrigins(undefined)).toEqual([
+      'https://f1-card-collection.onrender.com',
+    ]);
   });
 });
