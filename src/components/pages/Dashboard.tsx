@@ -106,7 +106,7 @@ export const Dashboard: React.FC = () => {
               <div className="flex items-center">
                 <Zap className="w-8 h-8 text-yellow-400 mr-3" />
                 <div>
-                  <div className="text-2xl font-bold text-white">{gameState.speedCoins.toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-white">{gameState.speedCoins?.toLocaleString() ?? '0'}</div>
                   <div className="text-gray-300 text-sm">Speed Coins</div>
                 </div>
               </div>
