@@ -11,6 +11,7 @@ export const ProfilePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [bannerUrl, setBannerUrl] = useState('');
   const [bio, setBio] = useState('');
 
@@ -29,11 +30,8 @@ export const ProfilePage: React.FC = () => {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setAvatarUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setAvatarFile(file);
+      setAvatarUrl(URL.createObjectURL(file));
     }
   };
 
@@ -42,7 +40,7 @@ export const ProfilePage: React.FC = () => {
   };
 
   const handleSave = async () => {
-    await updateUserProfile({ avatarUrl, bannerUrl, bio });
+    await updateUserProfile({ avatarFile, bannerUrl, bio });
   };
 
   const topCards = [...gameState.userCards]
