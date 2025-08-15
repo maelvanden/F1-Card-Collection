@@ -57,7 +57,7 @@ export const Header: React.FC = () => {
               <>
                 <div className="flex items-center bg-gradient-to-r from-yellow-500 to-yellow-600 text-black px-4 py-2 rounded-full font-bold shadow-lg">
                   <Zap className="w-4 h-4 mr-1" />
-                  <span>{gameState.speedCoins.toLocaleString()} SC</span>
+                  <span>{gameState.speedCoins?.toLocaleString() ?? '0'} SC</span>
                 </div>
 
                 <Link to={`/profile/${gameState.user?.username}`} className="flex items-center text-white hover:underline">

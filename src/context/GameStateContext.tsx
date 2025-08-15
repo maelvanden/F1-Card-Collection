@@ -45,7 +45,15 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     if (savedState) {
       try {
         const parsed = JSON.parse(savedState);
-        setGameState({ packsOpened: 0, cardsPurchased: 0, ...parsed });
+        setGameState({
+          user: parsed.user ?? null,
+          userCards: parsed.userCards ?? [],
+          speedCoins: parsed.speedCoins ?? 0,
+          packsOpened: parsed.packsOpened ?? 0,
+          cardsPurchased: parsed.cardsPurchased ?? 0,
+          isAuthenticated: parsed.isAuthenticated ?? false,
+          token: parsed.token ?? null,
+        });
       } catch (error) {
         console.error('Failed to parse saved game state', error);
       }

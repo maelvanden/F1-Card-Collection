@@ -61,7 +61,7 @@ export const ShopPage: React.FC = () => {
             <div className="inline-flex items-center bg-yellow-500/10 border border-yellow-500/20 rounded-full px-6 py-2">
               <Zap className="w-5 h-5 text-yellow-400 mr-2" />
               <span className="text-yellow-300 font-bold">
-                {gameState.speedCoins.toLocaleString()} Speed Coins
+                {gameState.speedCoins?.toLocaleString() ?? '0'} Speed Coins
               </span>
             </div>
             
