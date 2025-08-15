@@ -14,6 +14,7 @@ interface GameStateContextType {
   addCards: (cards: Card[]) => void;
   removeCard: (cardId: string) => void;
   updateUserProfile: (data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>) => Promise<void>;
+  profileUpdateStatus: 'idle' | 'loading' | 'success' | 'error';
   unlockAchievement: (id: string, type?: 'daily' | 'normal') => void;
   claimAchievementReward: (id: string, type?: 'daily' | 'normal') => void;
   resetDailyChallenges: () => void;
@@ -38,6 +39,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [achievements, setAchievements] = useState<Achievement[]>(defaultAchievements);
   const [dailyAchievements, setDailyAchievements] = useState<Achievement[]>(defaultDailyAchievements);
   const [lastUnlockedAchievement, setLastUnlockedAchievement] = useState<Achievement | null>(null);
+  const [profileUpdateStatus, setProfileUpdateStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const unlockedRef = useRef<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -209,6 +211,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const updateUserProfile = async (
     data: Partial<Pick<User, 'bio' | 'avatarUrl' | 'bannerUrl'>>
   ) => {
+    const previousUser = gameState.user ? { ...gameState.user } : null;
+
     // Optimistically update the local user profile
     setGameState(prev => ({
       ...prev,
@@ -216,7 +220,14 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }));
 
     const token = gameState.token;
-    if (!token) return;
+    if (!token) {
+      setGameState(prev => ({ ...prev, user: previousUser }));
+      setProfileUpdateStatus('error');
+      setTimeout(() => setProfileUpdateStatus('idle'), 3000);
+      return;
+    }
+
+    setProfileUpdateStatus('loading');
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
@@ -234,9 +245,13 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         ...prev,
         user: result.user ? { ...prev.user!, ...result.user } : prev.user,
       }));
+      setProfileUpdateStatus('success');
     } catch (err) {
-      // Keep optimistic update; just log the error
+      setGameState(prev => ({ ...prev, user: previousUser }));
       console.error('Failed to update profile', err);
+      setProfileUpdateStatus('error');
+    } finally {
+      setTimeout(() => setProfileUpdateStatus('idle'), 3000);
     }
   };
 
@@ -376,6 +391,7 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       incrementCardsPurchased,
       lastUnlockedAchievement,
       clearLastAchievement,
+      profileUpdateStatus,
     }}>
       {children}
     </GameStateContext.Provider>

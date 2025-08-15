@@ -6,7 +6,7 @@ import { Button } from '../ui/Button';
 
 export const ProfilePage: React.FC = () => {
   const { username } = useParams();
-  const { gameState, updateUserProfile } = useGameStateContext();
+  const { gameState, updateUserProfile, profileUpdateStatus } = useGameStateContext();
   const user = gameState.user;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,8 +130,22 @@ export const ProfilePage: React.FC = () => {
           <Button>Échanger</Button>
         </div>
       </div>
-      <div className="fixed bottom-4 right-4">
-        <Button onClick={handleSave}>Enregistrer</Button>
+      <div className="fixed bottom-4 right-4 flex flex-col items-end space-y-2">
+        {profileUpdateStatus === 'loading' && (
+          <p className="text-blue-400">Sauvegarde...</p>
+        )}
+        {profileUpdateStatus === 'success' && (
+          <p className="text-green-400">Profil mis à jour</p>
+        )}
+        {profileUpdateStatus === 'error' && (
+          <p className="text-red-400">Erreur lors de la mise à jour</p>
+        )}
+        <Button
+          onClick={handleSave}
+          disabled={profileUpdateStatus === 'loading'}
+        >
+          {profileUpdateStatus === 'loading' ? 'Enregistrement...' : 'Enregistrer'}
+        </Button>
       </div>
     </div>
   );
